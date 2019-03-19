@@ -11,14 +11,13 @@ import pymongo
 class WpcscraperPipeline(object):
 
     def __init__(self):
-        self.conn = pymongo.mongo_client(
+        self.conn = pymongo.MongoClient(
 
-            'localhost',
-            27017
+            'mongodb+srv://DevUser:$B116168kp$@cluster0-4am5x.mongodb.net/test?retryWrites=true'
         )
 
-        db = self.conn['myquotes']
-        self.collection = db['tbl_quotes']
+        db = self.conn['scraper']
+        self.collection = db['tbl_data']
 
     def process_item(self, item, spider):
         self.collection.insert(dict(item))

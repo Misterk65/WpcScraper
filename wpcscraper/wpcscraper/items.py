@@ -19,5 +19,14 @@ class amazonItems(scrapy.Item):
     prod_brand = scrapy.Field()
     prod_description = scrapy.Field()
     prod_price = scrapy.Field()
-    prod_score = scrapy.Field()
+    # prod_asin = scrapy.Field()
     prod_image = scrapy.Field()
+
+
+class amazonProductItems(scrapy.Item):
+    Index = scrapy.Field()
+    # Asin = scrapy.Field()
+    Brand = scrapy.Field()
+    Description = scrapy.Field()
+    Price = scrapy.Field()
+    Img_Link = scrapy.Field()
