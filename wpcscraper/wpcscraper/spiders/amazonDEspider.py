@@ -13,7 +13,7 @@ class AmazondespiderSpider(scrapy.Spider):
     page_number = 2
     start_urls = [
         # 'https://www.amazon.de/s/ref=nb_sb_noss_1?__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&url=search-alias%3Daps&field-keywords=qi&rh=i%3Aaps%2Ck%3Aqi+wireless'
-        'https://www.amazon.de/s?k=qi&__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&ref=nb_sb_noss_1'
+        'https://www.amazon.de/s/ref=sr_st_date-desc-rank?__mk_de_DE=%C3%85M%C3%85Z%C3%95%C3%91&keywords=qi&fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&qid=1553086802&sort=date-desc-rank'
         # Amazon DE
         # 'https://www.amazon.de/s/ref=sr_pg_2?rh=i%3Aaps%2Ck%3Aqi+wireless&page=2&keywords=qi+wireless&ie=UTF8&qid=1552828737' Amazon DE 2. page
         # 'https://www.amazon.com/s?k=qi+wireless+charger&crid=3JWK6SF4GYSTA&sprefix=qi+wirele%2Caps%2C349&ref=nb_sb_ss_i_1_9' # Amazon US
@@ -30,7 +30,8 @@ class AmazondespiderSpider(scrapy.Spider):
         prod_asin = response.css('.div::attr(data-asin)').css('::text').extract()
         prod_image = response.css('.cfMarker::attr(src)').extract()
 
-        print(prod_asin)
+        print(prod_brand)
+        print(prod_price)
 
 
         for index in range(1, len(prod_brand)):
@@ -42,13 +43,15 @@ class AmazondespiderSpider(scrapy.Spider):
                 oItems['Price'] = prod_price[index]
                 oItems['Img_Link'] = prod_image[index]
                 yield oItems
+
+                next_page = 'https://www.amazon.de/s/ref=sr_pg_2?fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&' + str(
+                    AmazondespiderSpider.page_number) + 'page=2&sort=date-desc-rank&keywords=qi&ie=UTF8&qid=1553086812'
+                AmazondespiderSpider.page_number += 1
+                yield response.follow(next_page, callback=self.parse)
             else:
                 print("Error in scraping")
 
-        next_page = 'https://www.amazon.de/s?k=qi&page=' + str(
-            AmazondespiderSpider.page_number) + '&__mk_de_DE=ÅMÅŽÕÑ&qid=1553006542&ref=sr_pg_2'
-        AmazondespiderSpider.page_number += 1
-        yield response.follow(next_page, callback=self.parse)
+
 
 
 """
