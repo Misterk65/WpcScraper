@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+from scrapy import Selector
+
+
 class AmazondespiderSpider(scrapy.Spider):
     name = 'amazonDEspiderBu'
     # allowed_domains = ['amazon.de']
@@ -21,6 +24,6 @@ class AmazondespiderSpider(scrapy.Spider):
                 'prod_brand': item.css('.a-color-secondary+ .a-color-secondary').css('::text').get(),
                 'prod_description': item.css('.s-access-title::text').get(),
                 'prod_price': item.css('.s-price::text').get(),
-                # 'prod_asin': item.css('.data-asin::text').get(),
-                'prod_image': item.css('.cfMarker::attr(src)').get()
+                'prod_asin': item.css('.a-row .a-spacing-none').get(),
+                'prod_image': item.css('.cfMarker::attr(src)').css('::name').get()
             }
