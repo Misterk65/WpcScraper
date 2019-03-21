@@ -30,3 +30,6 @@ class amazonProductItems(scrapy.Item):
     Description = scrapy.Field()
     Price = scrapy.Field()
     Img_Link = scrapy.Field()
+
+class amazonDEcrawler(scrapy.Item):
+    prod_url_de = scrapy.Field()
