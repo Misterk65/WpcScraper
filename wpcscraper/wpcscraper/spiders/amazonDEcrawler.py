@@ -6,7 +6,7 @@ from ..items import amazonDEcrawler
 
 
 
-class AmazondespiderSpider(scrapy.Spider):
+class Amazondespidercrawler(scrapy.Spider):
     name = 'amazonDEcrawler'
     # allowed_domains = ['amazon.de']
     page_number = 2
@@ -16,31 +16,38 @@ class AmazondespiderSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
+        
+        # Declarations 
 
         url_items = amazonDEcrawler
         base_url = 'https://www.amazon.de'
         urlList = []
+        
+        # Extract the product URL from the initial search page
         prod_urls = response.css('.a-link-normal::attr(href)').getall()
-
+        
+        # Parse through the found URLs and parse out the product relevant ones
         for url in prod_urls:
             if url.startswith('/gp/slredirect/'):
-                urlList.append(base_url + url)
-
-        urlList = list(dict.fromkeys(urlList))
-        print(urlList)
-
-        for links in urlList:
+                urlList.append(base_url + url) # Add the base URL of the website and append the results to
+                                               # to a list.
+        urlList = list(dict.fromkeys(urlList)) # Remove the duplicates in the list
+        print(urlList) # Print the list -> This has to be removed in the released version
+        
+        # Write to database -> Not needed in the Release at this point.
+        for links in urlList: 
             yield {
 
                 "product_link": links,
                 "timestamp": datetime.datetime.now()
             }
-
+            
+            # Go to second...n page 
             next_page = 'Page 2 https://www.amazon.de/s/ref=sr_pg_2?fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn' \
                         '%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&page=' + str(
                 AmazondespiderSpider.page_number) + '&keywords=qi&ie=UTF8&qid=1553174833 '
-            AmazondespiderSpider.page_number += 1
-            yield response.follow(next_page, callback=self.parse)
+            AmazondespiderSpider.page_number += 1 # Increment the page 
+            yield response.follow(next_page, callback=self.parse) # Call the parse function until the last page is reached
 
 
         """
