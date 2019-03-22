@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import datetime
 
 from ..items import amazonDEcrawler
 
@@ -31,8 +32,15 @@ class AmazondespiderSpider(scrapy.Spider):
         for links in urlList:
             yield {
 
-                "product_link": links
+                "product_link": links,
+                "timestamp": datetime.datetime.now()
             }
+
+            next_page = 'Page 2 https://www.amazon.de/s/ref=sr_pg_2?fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn' \
+                        '%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&page=' + str(
+                AmazondespiderSpider.page_number) + '&keywords=qi&ie=UTF8&qid=1553174833 '
+            AmazondespiderSpider.page_number += 1
+            yield response.follow(next_page, callback=self.parse)
 
 
         """
