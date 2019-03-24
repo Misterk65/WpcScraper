@@ -14,22 +14,5 @@ class WpcscraperItem(scrapy.Item):
     author = scrapy.Field()
     tag = scrapy.Field()
 
-
-class amazonItems(scrapy.Item):
-    prod_brand = scrapy.Field()
-    prod_description = scrapy.Field()
-    prod_price = scrapy.Field()
-    # prod_asin = scrapy.Field()
-    prod_image = scrapy.Field()
-
-
-class amazonProductItems(scrapy.Item):
-    Index = scrapy.Field()
-    # Asin = scrapy.Field()
-    Brand = scrapy.Field()
-    Description = scrapy.Field()
-    Price = scrapy.Field()
-    Img_Link = scrapy.Field()
-
 class amazonDEcrawler(scrapy.Item):
     prod_url_de = scrapy.Field()

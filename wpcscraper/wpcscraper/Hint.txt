@@ -1,0 +1,25 @@
+class MySpider(Spider):
+    name = 'myspider'
+
+    idle_time = 0
+    def functionA(self):
+        # returns urls
+
+    def start_requests(self):
+        for url in self.functionA():
+            yield Request(url, callback=self.parse)
+        self.crawler.signals.connect(self.spider_idle,
+                                     signal=signals.spider_idle)
+
+    def spider_idle(self, spider):
+        # called when the spider is `idle`, before finishing
+        self.idle_time += 1
+        if self.idle_time < 10: # how many times you want to recrawl?
+            for url in self.functionA():
+                yield Request(url, callback=self.parse)
+
+
+    def parse(self, response):
+        # parse your urls
+
+https://stackoverflow.com/questions/36086557/how-scrapy-work-in-dynamic-start-urls-repeatly
