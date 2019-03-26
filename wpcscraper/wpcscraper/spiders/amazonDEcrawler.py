@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.http import *
-from scrapy.crawler import CrawlerProcess
-from pydispatch import dispatcher
-from ..items import amazonDEcrawler
+from scrapy import selector
 
 import json
 import os
@@ -39,29 +37,15 @@ class AmazondespiderSpider(scrapy.Spider):
 
             AmazondespiderSpider.urlList = list(dict.fromkeys(AmazondespiderSpider.urlList)) # Remove the duplicates in the list
 
+        for link in AmazondespiderSpider.urlList:
+            yield Request(link, callback=self.parse_link)
 
 
-            #Go to second...n page
-            next_page = 'Page 2 https://www.amazon.de/s/ref=sr_pg_2?fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn' \
-                        '%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&page=' + str(
-                AmazondespiderSpider.page_number) + '&keywords=qi&ie=UTF8&qid=1553174833 '
-            AmazondespiderSpider.page_number += 1 # Increment the page
-            yield response.follow(next_page, callback=self.parse) # Call the parse function until the last page is reached
+    def parse_link(self, response):
 
-        with open('data.txt', 'w') as outfile:
-            json.dump(AmazondespiderSpider.urlList, outfile)
+        prod_Asin = response.selector.xpath('//*[(@id = "detail_bullets_id")]//b[text()[contains(.,"ASIN:")]/li/text()]').get()
 
-    print('**********************************************************************************************HALLO**********************************************************')
+        if prod_Asin is None:
+            prod_Asin = response.css('.col2 tr:nth-child(1) .value::text').get()
 
-    with open('data.txt') as json_file:
-        data = json.load(json_file)
-        for p in data:
-            print(p)
-
-    print('****Printing Done****')
-
-    if os.path.exists('data.txt'):
-        os.remove('data.txt')
-        print('***File deleted***')
-    else:
-        print('File does not exist !')
+        print(prod_Asin)

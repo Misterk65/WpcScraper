@@ -23,3 +23,35 @@ class MySpider(Spider):
         # parse your urls
 
 https://stackoverflow.com/questions/36086557/how-scrapy-work-in-dynamic-start-urls-repeatly
+
+ with open('data.txt', 'w') as outfile:
+            json.dump(AmazondespiderSpider.urlList, outfile)
+
+    print('**********************************************************************************************HALLO**********************************************************')
+
+
+    with open('data.txt') as json_file:
+        data = json.load(json_file)
+        for p in data:
+            print(p)
+
+    print('****Printing Done****')
+
+    if os.path.exists('data.txt'):
+        os.remove('data.txt')
+        print('***File deleted***')
+    else:
+        print('File does not exist !')
+
+
+#Go to second...n page
+next_page = 'Page 2 https://www.amazon.de/s/ref=sr_pg_2?fst=as%3Aon&rh=k%3Aqi%2Cn%3A562066%2Cn' \
+                        '%3A1384526031%2Cn%3A364918031%2Cn%3A364929031%2Cn%3A1385091031&page=' + str(
+                AmazondespiderSpider.page_number) + '&keywords=qi&ie=UTF8&qid=1553174833 '
+            AmazondespiderSpider.page_number += 1 # Increment the page
+            yield response.follow(next_page, callback=self.parse) # Call the parse function until the last page is reached
+
+prod_Asin = response.css('#detail_bullets_id li:nth-child(3)::text').get()
+
+        if prod_Asin is None:
+            prod_Asin = response.css('.col2 tr:nth-child(1) .value::text').get()
