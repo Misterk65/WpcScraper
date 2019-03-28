@@ -1,37 +1,12 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import pymongo
 from scrapy.http import *
 
 import time
 
-
-def findkeywords(t):
-    # Declare Array
-
-    keywords = []
-    outputstring = ""
-
-    with open('keywords.txt') as my_file:
-        keywords = my_file.readlines()
-
-    # print(keywords)
-
-    inputstring = str(t)
-
-    for keyword in keywords:
-        keyword = keyword.strip()
-        result = inputstring.find(keyword)
-        if result > -1:
-            outputstring = outputstring + " " + keyword
-
-    # print('Out' + outputstring)
-    return outputstring
-
 class AmazondespiderSpider(scrapy.Spider):
 
     # Class declarations
-
     name = 'amazonDEcrawler'
     # allowed_domains = ['amazon.de']
     page_number = 1
@@ -77,18 +52,13 @@ class AmazondespiderSpider(scrapy.Spider):
             yield Request(link, callback=self.parse_link)
 
 
-
     def parse_link(self, response):
 
         prod_Vendor = response.selector.xpath('//*[(@id="bylineInfo")]/text()').get()
         prod_Asin = response.selector.xpath('//li[contains(.,"ASIN:")]/text()').get()
         prod_Vendor_ID = response.selector.xpath('//li[contains(.,"Modellnummer:")]/text()').get()
-        prod_description = response.css('#productTitle::text').get()
         prod_at_Seller = response.selector.xpath('//li[contains(.,"Im Angebot von Amazon.de seit:")]/text()').get()
         prod_link = response.url
-
-        key = findkeywords(str(prod_description).strip())
-        print(key)
 
         if prod_Asin is None:
             prod_Asin = 'Not Available'
@@ -111,8 +81,6 @@ class AmazondespiderSpider(scrapy.Spider):
             'VendorId': prod_Vendor_ID.strip(),
             'ASIN': prod_Asin.strip(),
             'AddedToPlatform':prod_at_Seller.strip(),
-            'Keywords': key,
             'ProductLink': prod_link.strip(),
             'ScrapedOnUtc': time.time()
         }
-
