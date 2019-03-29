@@ -88,7 +88,6 @@ class AmazondespiderSpider(scrapy.Spider):
         prod_link = response.url
 
         key = findkeywords(str(prod_description).strip())
-        print(key)
 
         if prod_Asin is None:
             prod_Asin = 'Not Available'
@@ -111,8 +110,8 @@ class AmazondespiderSpider(scrapy.Spider):
             'VendorId': prod_Vendor_ID.strip(),
             'ASIN': prod_Asin.strip(),
             'AddedToPlatform':prod_at_Seller.strip(),
-            'Keywords': key,
+            'Keywords': key.lstrip(),
             'ProductLink': prod_link.strip(),
-            'ScrapedOnUtc': time.time()
+            'ScrapedOn': time.time()
         }
 
