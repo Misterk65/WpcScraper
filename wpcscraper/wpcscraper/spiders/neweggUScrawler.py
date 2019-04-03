@@ -15,8 +15,9 @@ class NeweggUSCrawler(scrapy.Spider):
     next_page = 2
 
     start_urls = [
-         'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=qi&N=-1&isNodeId=1'
-        # https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&N=-1&IsNodeId=1&Description=qi&bop=And&Page=2&PageSize=36&order=BESTMATCH
+        # 'https://www.newegg.ca/Product/ProductList.aspx?Submit=ENE&DEPA=0&Order=BESTMATCH&Description=qi&N=-1&isNodeId=1'
+         'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&N=-1&IsNodeId=1&Description=qi&bop=And&Page=2&PageSize=36&order=BESTMATCH'
+        # 'file:///Users/karstenpeucker/Downloads/qi%20-%20Newegg.ca.html'
     ]
 
     def parse(self, response):
@@ -26,7 +27,7 @@ class NeweggUSCrawler(scrapy.Spider):
 
         pagination = response.css('.list-tool-pagination-text strong::text').get()
         pagination = str(pagination).split('/')
-
+        print(pagination)
         NeweggUSCrawler.page_number = int(pagination[1])
         # print(NeweggUSCrawler.page_number)
 
@@ -42,6 +43,7 @@ class NeweggUSCrawler(scrapy.Spider):
 
             print(NeweggUSCrawler.urlList)
             # Go to second...n page
+            time.sleep(3)
             for NeweggUSCrawler.next_page in range(2, NeweggUSCrawler.page_number):
                 next_url = 'https://www.newegg.com/Product/ProductList.aspx?Submit=ENE&N=-1&IsNodeId=1&Description=qi&bop=And&Page='  + \
                            str(NeweggUSCrawler.next_page) + '&PageSize=36&order=BESTMATCH'
@@ -53,6 +55,7 @@ class NeweggUSCrawler(scrapy.Spider):
         # Call the parse_link Funnction to extract data from product detail page
         for link in NeweggUSCrawler.urlList:
             NeweggUSCrawler.current_Link = link
+            time.sleep(3)
             yield Request(link, callback=self.parse_link)
 
 
@@ -75,6 +78,11 @@ class NeweggUSCrawler(scrapy.Spider):
 
         if prod_Seller is None:
             prod_Seller = 'Not Available'
+
+        print(prod_Vendor)
+        print(prod_Vendor_ID)
+        print(prod_NeweggID)
+        print(prod_Seller)
 
         # Before writing to database extract from the product title keywords which are hold in a list.
         # Probably a good idea to read initially from a file/database to be flexible.

@@ -29,8 +29,10 @@ ROBOTSTXT_OBEY = True
 # See also autothrottle settings and docs
 # DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+# CONCURRENT_REQUESTS = 20
+# CONCURRENT_REQUESTS_PER_DOMAIN = 1
 # CONCURRENT_REQUESTS_PER_IP = 16
+# DOWNLOAD_TIMEOUT = 30
 
 # Disable cookies (enabled by default)
 # COOKIES_ENABLED = False
@@ -53,7 +55,7 @@ ROBOTSTXT_OBEY = True
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    'wpcscraper.middlewares.WpcscraperDownloaderMiddleware': 543,
+#   'wpcscraper.middlewares.WpcscraperDownloaderMiddleware': 543,
 # }
 PROXY_POOL_ENABLED = True
 
