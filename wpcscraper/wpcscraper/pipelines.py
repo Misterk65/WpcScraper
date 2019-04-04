@@ -17,7 +17,7 @@ class WpcscraperPipeline(object):
         )
 
         db = self.conn['scraper']
-        self.collection = db['tbl_data_temp']
+        self.collection = db['tbl_scraper_temp']
 
     def process_item(self, item, spider):
         self.collection.insert(dict(item))

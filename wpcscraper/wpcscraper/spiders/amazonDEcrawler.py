@@ -39,7 +39,11 @@ class AmazondespiderSpider(scrapy.Spider):
     current_Link=""
     next_page = ""
     start_urls = [
-         'https://www.amazon.de/s?k=qi&rh=n%3A562066&lo=grid&dc&__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&qid=1553672247&rnid=1703609031&ref=sr_nr_n_1'
+         # 'https://www.amazon.de/s?k=qi&rh=n%3A562066&lo=grid&dc&__mk_de_DE=%C3%85M%C3%85%C5%BD%C3%95%C3%91&qid=1553672247&rnid=1703609031&ref=sr_nr_n_1'
+        'https://www.amazon.de/s?k=qi+powerbank&__mk_de_DE=ÅMÅŽÕÑ&crid=E80UZSHLIFFJ&sprefix=qi+Pwer%2Caps%2C431&ref=nb_sb_ss_sc_1_7',
+        'https://www.amazon.de/s?k=qi+ladegerät&__mk_de_DE=ÅMÅŽÕÑ&crid=2PKGZRLQ00SHR&sprefix=qi+Lade%2Caps%2C402&ref=nb_sb_ss_i_5_7',
+        'https://www.amazon.de/s?k=qi+ladestation+auto&__mk_de_DE=ÅMÅŽÕÑ&crid=3J408DNWDKTDA&sprefix=qi+la%2Caps%2C450&ref=nb_sb_ss_i_3_5',
+        'https://www.amazon.de/s?k=qi+ladestation&__mk_de_DE=ÅMÅŽÕÑ&ref=nb_sb_noss'
     ]
 
     def parse(self, response):
@@ -71,6 +75,7 @@ class AmazondespiderSpider(scrapy.Spider):
             yield response.follow(AmazondespiderSpider.next_page,
                                   callback=self.parse)
 
+
         # Call the parse_link Funnction to extract data from product detail page
         for link in AmazondespiderSpider.urlList:
             AmazondespiderSpider.current_Link = link
@@ -78,7 +83,10 @@ class AmazondespiderSpider(scrapy.Spider):
 
 
 
+
     def parse_link(self, response):
+
+        time.sleep(1)
 
         prod_Vendor = response.selector.xpath('//*[(@id="bylineInfo")]/text()').get()
         prod_Asin = response.selector.xpath('//li[contains(.,"ASIN:")]/text()').get()
